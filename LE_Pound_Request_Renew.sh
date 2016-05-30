@@ -84,7 +84,7 @@ for domain_name in "${domains[@]}"
             if [ ! -e ${le_cert} ]; then
                 echo "${le_cert} does not exist"
                 echo "Requesting cert for ${domain_name}"
-                ${le_bin}/letsencrypt-auto certonly --standalone --agree-tos --domains ${domain_name} --email ${email} --standalone-supported-challenges http-01 --http-01-port 8000 --renew-by-default
+                ${le_bin}/letsencrypt-auto certonly --standalone --agree-tos --domains ${domain_name} --email ${email} --standalone-supported-challenges http-01 --http-01-port 8000 --renew-by-default --rsa-key-size 4096
             fi
 
             echo "Creating pound cert for ${domain_name}"
@@ -103,7 +103,7 @@ for domain_name in "${domains[@]}"
             # The renew command is the same as the initial request command - it will use the config file in ${le_output}/renewal
             # if you used LE for this domain before (for example using the test parameter) you may need to alter the renew config file
             echo "Renewing cert for ${domain_name}"
-            ${le_bin}/letsencrypt-auto certonly --standalone --agree-tos --domains ${domain_name} --email ${email} --standalone-supported-challenges http-01 --http-01-port 8000 --renew-by-default
+            ${le_bin}/letsencrypt-auto certonly --standalone --agree-tos --domains ${domain_name} --email ${email} --standalone-supported-challenges http-01 --http-01-port 8000 --renew-by-default --rsa-key-size 4096
 
             echo "Creating pound cert for ${domain_name}"
             create_pound_cert ${le_live}/privkey.pem ${le_live}/fullchain.pem ${pound_cert}
