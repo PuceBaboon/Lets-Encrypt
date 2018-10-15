@@ -1,6 +1,6 @@
 # Lets-Encrypt
 
-[ This branch is a modified version of secwiseblog/Lets-Encrypt]
+This branch is a modified version of [secwiseblog/Lets-Encrypt](https://github.com/secwiseblog/Lets-Encrypt).
 
 This script handles certificate requests and renewals for the Pound reverse proxy.
 
