@@ -21,3 +21,8 @@ Certbot actually provides the method for authenticating with the Let's Encrypt s
 - python-dev
 - libiff-dev
 
+Because Pound must talk to the Let's Encrypt servers, it must be set up with a basic configuration (again, [see SecWiseBlog's original article](https://secwise.nl/lets-encrypt-certifcates-and-pound-load-balancer/) on how to do this) before you start.  If you have a firewall, you must also open the relevant ports and put in NAT rules between it and your internal Pound server.
+
+## Warnings
+If you use this script (and most especially if you use it for multiple individual certificates) without completing the Pound/Firewall configurations first, you will most likely fall foul of Let's Encrypt's rate limiting rules (usually the allowed number of failures in an hour) and be temporarily locked-out.  Depending on which rate you've exceeded, you could be locked out for up to a week, so it is very highly recommended that you stick with using the staging servers (the current default) until you've worked the kinks out of your process.
+
