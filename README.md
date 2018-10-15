@@ -1,8 +1,8 @@
 # Lets-Encrypt
 
-This branch is a modified version of [secwiseblog/Lets-Encrypt](https://github.com/secwiseblog/Lets-Encrypt).  Check out [SecWiseBlog's excellent article](https://secwise.nl/lets-encrypt-certifcates-and-pound-load-balancer/) on implementing this handy tool.
+This branch is a modified version of [secwiseblog/Lets-Encrypt](https://github.com/secwiseblog/Lets-Encrypt).  Check out [SecWiseBlog's excellent article](https://secwise.nl/lets-encrypt-certifcates-and-pound-load-balancer/) on configuration, implementation and use of this handy tool.
 
-This script handles certificate requests and renewals for the Pound reverse proxy.
+```LE_Pound_Request_Renew.sh``` handles certificate requests and renewals for the Pound reverse proxy.
 The script is basically a wrapper for "certbot-auto", to enable automatic fetching and installation of new or updated certificates in the format which Pound requires.
 
 #### Eh?
@@ -16,6 +16,8 @@ Basic nomenclature:-
  - [**CertBot**](https://certbot.eff.org/)  - A free, Python-based tool to automate the tasks of requesting, installing and renewing certificates from Let's Encrypt.
  
  - **certbot-auto**  - The bootstrap script and workhorse part of CertBot.
+ 
+ - "the/this script"  - Used in this README in reference to the ```LE_Pound_Request_Renew.sh``` script (the subject of this README).
  
 ---
 
@@ -46,9 +48,9 @@ The Let's Encrypt staging environment has very much higher rate limits than the 
 The other issue which may confuse first-time users is that the certificates from the staging servers are essentially the same as the untrusted, self-signed certificates which you can easily produce yourself.  So, what's the point?  Well, a major part of it is to make certain you *don't* get caught out by the rate limits when you're new to using CertBot and Let's Encrypt, but in addition, your staging certificates will be installed in exactly the same way as the live, genuine certificaes would be, so you can also check the whole of your local process through, right to the end stage of accessing your target site with the untrusted certificates.  On most modern browsers you are able to inspect the certificate which any site presents (especially if that certificate has just triggered an "unsafe"/"untrusted" warning message).  Using the Let's Encrypt staging certificate, you can use this functionality to verify that the domain and machine names that you requested in your certificate application are what you'd expect them to be and match your application flow.  If,for example, you forgot to add "mail.example.com" to the main certificate body, it's easy to go back and fix it in staging, without triggering any rate limiting.
 
 #### Housekeeping
-Once you've successfully managed to obtain certificates from the staging environment, you can move on to requesting a real, valid certificate, but before you do, you need to do some housekeeping.  First of all, make backups of your complete Pound and Let's Encrypt directories (usually /etc/pound and /etc/letsencrypt), as well as the directory structure which CertBot created on the first run through (usually /opt/eff.org). Because you've probably added packages to get this far, I'd recommend doing a complete backup of your whole machine and saving the backup to a different machine, or on removable media.
+Once you've successfully managed to obtain certificates from the staging environment, you can move on to requesting a real, valid certificate, but before you do, you need to do some housekeeping.  First of all, make backups of your complete Pound and Let's Encrypt directories (usually ```/etc/pound``` and ```/etc/letsencrypt```), as well as the directory structure which CertBot created on the first run through (usually ```/opt/eff.org```). Because you've probably added packages to get this far, I'd recommend doing a complete backup of your whole machine and saving the backup to a different machine, or on removable media.
 
-When you have everything safely backed up, you should revoke your staging certificates and remove the support files specific to them (*blindingly obvious warning* - **this is dangerous**, which is why you really, really must make a *good backup* before starting on these steps).  Use CertBot to "revoke --staging" and then "delete --staging" [following the instructions in the CertBot documentation](https://certbot.eff.org/docs/using.html?highlight=revoke#revoking-certificates).  Because this is for the Pound server, you also need to move the staging server certificate from the /etc/pound/certs directory.  I would recommend that you create an archive directory in /etc/pound (not in the certs directory itself) and keep all of your old certificates there.
+When you have everything safely backed up, you should revoke your staging certificates and remove the support files specific to them (*blindingly obvious warning* - **this is dangerous**, which is why you really, really must make a *good backup* before starting on these steps).  Use CertBot to ```revoke --staging``` and then ```delete --staging``` [following the instructions in the CertBot documentation](https://certbot.eff.org/docs/using.html?highlight=revoke#revoking-certificates).  Because this is for the Pound server, you also need to move the staging server certificate from the ```/etc/pound/certs``` directory.  I would recommend that you create an archive directory in ```/etc/pound``` (not in the certs directory itself) and move all of your old certificates there.
 
 ***Important Note*** If you fail to revoke and remove the staging certificates, your request for a genuine certificate with the same name from Let's Encrypt will work (CertBot can work around most obvious problems), but the new certificate will be stored under a different, unique name, which will cause the Pound-specific part of the process to fail, as the script has no easy way of knowing what CertBot has named the new certificate.
 
